@@ -291,7 +291,7 @@ class BaseTransport(ClientProtocol):
             return
         if not self.is_connected:
             return
-        
+
         await self._send_and_wait(
             opcode=Opcode.NOTIF_MESSAGE,
             payload={"chatId": chat_id, "messageId": message_id},
