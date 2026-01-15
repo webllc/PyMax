@@ -287,8 +287,11 @@ class BaseTransport(ClientProtocol):
                     self.logger.debug("Fulfilled file upload waiter for %s=%s", key, id_)
 
     async def _send_notification_response(self, chat_id: int, message_id: str) -> None:
-        if self._socket is not None and self.is_connected:
+        if self._socket is None:  # WebSocket режим - не отправляем подтверждение
             return
+        if not self.is_connected:
+            return
+        
         await self._send_and_wait(
             opcode=Opcode.NOTIF_MESSAGE,
             payload={"chatId": chat_id, "messageId": message_id},
